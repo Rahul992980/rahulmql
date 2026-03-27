@@ -1,0 +1,37 @@
+//@version=5
+indicator("EMA Crossover Signals", overlay=true)
+
+// === INPUTS ===
+fastLength = input.int(9, title="Fast EMA Length")
+slowLength = input.int(21, title="Slow EMA Length")
+
+// === CALCULATIONS ===
+fastEMA = ta.ema(close, fastLength)
+slowEMA = ta.ema(close, slowLength)
+
+// === CROSS CONDITIONS ===
+buySignal  = ta.crossover(fastEMA, slowEMA)
+sellSignal = ta.crossunder(fastEMA, slowEMA)
+
+// === PLOT EMAs ===
+plot(fastEMA, color=color.green, title="Fast EMA")
+plot(slowEMA, color=color.red, title="Slow EMA")
+
+// === SIGNAL PLOTS ===
+plotshape(buySignal, 
+     title="Buy Signal", 
+     location=location.belowbar, 
+     color=color.green, 
+     style=shape.labelup, 
+     text="BUY")
+
+plotshape(sellSignal, 
+     title="Sell Signal", 
+     location=location.abovebar, 
+     color=color.red, 
+     style=shape.labeldown, 
+     text="SELL")
+
+// === ALERTS ===
+alertcondition(buySignal, title="Buy Alert", message="EMA Buy Signal")
+alertcondition(sellSignal, title="Sell Alert", message="EMA Sell Signal")
